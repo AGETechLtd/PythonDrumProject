@@ -1,0 +1,17 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+bin/
+obj/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Media/Assets (If they are very large, you might not want them on GitHub)
+# media/assets/ 
+
+# OS files
+.DS_Store
+Thumbs.db

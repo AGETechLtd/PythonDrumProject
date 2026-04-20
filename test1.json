@@ -1,0 +1,1061 @@
+{
+  "metadata": {
+    "bpm": 143,
+    "format": "flattened_global"
+  },
+  "events": [
+    {
+      "timestamp_ms": 0,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 209,
+      "parts": [
+        ""
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 419,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 629,
+      "parts": [
+        ""
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 839,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 1048,
+      "parts": [
+        ""
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 1258,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 1678,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 1888,
+      "parts": [
+        ""
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 2097,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 2307,
+      "parts": [
+        "snare"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 2517,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 2727,
+      "parts": [
+        ""
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 2937,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 3356,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 3566,
+      "parts": [
+        ""
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 3776,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 3986,
+      "parts": [
+        "snare"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 4195,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 4405,
+      "parts": [
+        ""
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 4615,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 5034,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 5244,
+      "parts": [
+        ""
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 5454,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 5664,
+      "parts": [
+        "snare"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 5874,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 6083,
+      "parts": [
+        ""
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 6293,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 6713,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 6923,
+      "parts": [
+        ""
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 7132,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 7342,
+      "parts": [
+        "snare"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 7552,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 7762,
+      "parts": [
+        ""
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 7972,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 8391,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 8601,
+      "parts": [
+        ""
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 8811,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 9020,
+      "parts": [
+        "snare"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 9230,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 9440,
+      "parts": [
+        ""
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 9650,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 10069,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 10279,
+      "parts": [
+        ""
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 10489,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 10699,
+      "parts": [
+        "snare"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 10909,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 11118,
+      "parts": [
+        ""
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 11328,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 11748,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 11958,
+      "parts": [
+        ""
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 12167,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 12377,
+      "parts": [
+        "snare"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 12587,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 12797,
+      "parts": [
+        ""
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 13006,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 13426,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 13636,
+      "parts": [
+        ""
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 13846,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 14055,
+      "parts": [
+        "snare"
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 14265,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 14475,
+      "parts": [
+        ""
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 14685,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 9
+    },
+    {
+      "timestamp_ms": 15104,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 15314,
+      "parts": [
+        ""
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 15524,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 15734,
+      "parts": [
+        "snare"
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 15944,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 16153,
+      "parts": [
+        ""
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 16363,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 10
+    },
+    {
+      "timestamp_ms": 16783,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 16993,
+      "parts": [
+        ""
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 17202,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 17412,
+      "parts": [
+        "snare"
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 17622,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 17832,
+      "parts": [
+        ""
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 18041,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 11
+    },
+    {
+      "timestamp_ms": 18461,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 18671,
+      "parts": [
+        ""
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 18881,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 19090,
+      "parts": [
+        "snare"
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 19300,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 19510,
+      "parts": [
+        ""
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 19720,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 12
+    },
+    {
+      "timestamp_ms": 20139,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 20349,
+      "parts": [
+        ""
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 20559,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 20769,
+      "parts": [
+        "snare"
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 20979,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 21188,
+      "parts": [
+        ""
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 21398,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 13
+    },
+    {
+      "timestamp_ms": 21818,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 22027,
+      "parts": [
+        ""
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 22237,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 22447,
+      "parts": [
+        "snare"
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 22657,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 22867,
+      "parts": [
+        ""
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 23076,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 14
+    },
+    {
+      "timestamp_ms": 23496,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 23706,
+      "parts": [
+        ""
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 23916,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 24125,
+      "parts": [
+        "snare"
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 24335,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 24545,
+      "parts": [
+        ""
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 24755,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 15
+    },
+    {
+      "timestamp_ms": 25174,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 25384,
+      "parts": [
+        ""
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 25594,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 25804,
+      "parts": [
+        "snare"
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 26013,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 26223,
+      "parts": [
+        ""
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 26433,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 16
+    },
+    {
+      "timestamp_ms": 26853,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 27062,
+      "parts": [
+        ""
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 27272,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 27482,
+      "parts": [
+        "snare"
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 27692,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 27902,
+      "parts": [
+        ""
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 28111,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 17
+    },
+    {
+      "timestamp_ms": 28531,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 28741,
+      "parts": [
+        ""
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 28951,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 29160,
+      "parts": [
+        "snare"
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 29370,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 29580,
+      "parts": [
+        ""
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 29790,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 18
+    },
+    {
+      "timestamp_ms": 30209,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 30419,
+      "parts": [
+        ""
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 30629,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 30839,
+      "parts": [
+        "snare"
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 31048,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 31258,
+      "parts": [
+        ""
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 31468,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 19
+    },
+    {
+      "timestamp_ms": 31888,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 32097,
+      "parts": [
+        ""
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 32307,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 32517,
+      "parts": [
+        "snare"
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 32727,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 32937,
+      "parts": [
+        ""
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 33146,
+      "parts": [
+        "hi-hat",
+        "kick"
+      ],
+      "measure": 20
+    },
+    {
+      "timestamp_ms": 33566,
+      "parts": [
+        "kick"
+      ],
+      "measure": 21
+    },
+    {
+      "timestamp_ms": 33776,
+      "parts": [
+        ""
+      ],
+      "measure": 21
+    },
+    {
+      "timestamp_ms": 33986,
+      "parts": [
+        ""
+      ],
+      "measure": 21
+    },
+    {
+      "timestamp_ms": 34195,
+      "parts": [
+        ""
+      ],
+      "measure": 21
+    },
+    {
+      "timestamp_ms": 34405,
+      "parts": [
+        ""
+      ],
+      "measure": 21
+    },
+    {
+      "timestamp_ms": 34615,
+      "parts": [
+        ""
+      ],
+      "measure": 21
+    },
+    {
+      "timestamp_ms": 34825,
+      "parts": [
+        ""
+      ],
+      "measure": 21
+    }
+  ]
+}

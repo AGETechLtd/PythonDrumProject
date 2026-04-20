@@ -1,0 +1,488 @@
+{
+  "metadata": {
+    "bpm": 60,
+    "format": "flattened_global"
+  },
+  "events": [
+    {
+      "timestamp_ms": 0,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 1000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 1500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 2000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 2500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 3000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 3500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 1
+    },
+    {
+      "timestamp_ms": 4000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 4500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 5000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 5500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 6000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 6500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 7000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 7500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 2
+    },
+    {
+      "timestamp_ms": 8000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 8500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 9000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 9500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 10000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 10500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 11000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 11500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 3
+    },
+    {
+      "timestamp_ms": 12000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 12500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 13000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 13500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 14000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 14500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 15000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 15500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 4
+    },
+    {
+      "timestamp_ms": 16000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 16500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 17000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 17500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 18000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 18500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 19000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 19500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 5
+    },
+    {
+      "timestamp_ms": 20000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 20500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 21000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 21500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 22000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 22500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 23000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 23500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 6
+    },
+    {
+      "timestamp_ms": 24000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 24500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 25000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 25500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 26000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 26500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 27000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 27500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 7
+    },
+    {
+      "timestamp_ms": 28000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 28500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 29000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 29500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 30000,
+      "parts": [
+        "kick",
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 30500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 31000,
+      "parts": [
+        "snare",
+        "hi-hat"
+      ],
+      "measure": 8
+    },
+    {
+      "timestamp_ms": 31500,
+      "parts": [
+        "hi-hat"
+      ],
+      "measure": 8
+    }
+  ]
+}
