@@ -2,8 +2,9 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog
 import customtkinter as ctk
 import requests, json, re, time, sqlite3, os, pygame, mido, threading
+from PIL import Image, ImageTk
 
-# --- CONFIGURATION ---
+# --- GLOBAL CONFIG ---
 N8N_URL = "https://autotuto.app.n8n.cloud/webhook-test/a44c387d-f012-49d4-86a2-c7ec43c6774a"
 DB_NAME = 'drum_coach.db'
 LATENCY_OFFSET = 25 
@@ -11,275 +12,311 @@ LATENCY_OFFSET = 25
 PART_CONFIG = {
     "kick": {"lane": 1, "color": (255, 87, 51), "label": "KICK", "sound": "kick.wav"},
     "snare": {"lane": 2, "color": (46, 204, 113), "label": "SNARE", "sound": "snare.wav"},
+    "snare-rim": {"lane": 2, "color": (39, 174, 96), "label": "SNARE RIM", "sound": "snare.wav"},
     "closed-hi-hat": {"lane": 3, "color": (52, 152, 219), "label": "HI-HAT (C)", "sound": "Closed-Hi-Hat.wav"},
     "open-hi-hat": {"lane": 3, "color": (241, 196, 15), "label": "HI-HAT (O)", "sound": "Open-Hi-Hat.wav"},
+    "hi-hat-rim": {"lane": 3, "color": (41, 128, 185), "label": "HI-HAT RIM", "sound": "Closed-Hi-Hat.wav"},
     "high-tom": {"lane": 4, "color": (155, 89, 182), "label": "TOM 1", "sound": "kick.wav"},
     "mid-tom": {"lane": 4, "color": (155, 89, 182), "label": "TOM 2", "sound": "kick.wav"},
     "low-tom": {"lane": 5, "color": (142, 68, 173), "label": "FLOOR TOM", "sound": "kick.wav"},
-    "crash-cymbal": {"lane": 6, "color": (231, 76, 60), "label": "CRASH", "sound": "snare.wav"},
-    "ride-cymbal": {"lane": 7, "color": (243, 156, 18), "label": "RIDE", "sound": "Closed-Hi-Hat.wav"},
-    "ride-bell": {"lane": 7, "color": (255, 215, 0), "label": "BELL", "sound": "Closed-Hi-Hat.wav"}
+    "crash-cymbal": {"lane": 6, "color": (231, 76, 60), "label": "CRASH 1", "sound": "snare.wav"},
+    "crash-rim": {"lane": 6, "color": (192, 57, 43), "label": "CRASH 1 RIM", "sound": "snare.wav"},
+    "crash-cymbal-2": {"lane": 7, "color": (155, 89, 182), "label": "CRASH 2", "sound": "snare.wav"},
+    "crash-2-rim": {"lane": 7, "color": (142, 68, 173), "label": "CRASH 2 RIM", "sound": "snare.wav"},
+    "ride-cymbal": {"lane": 8, "color": (243, 156, 18), "label": "RIDE", "sound": "Closed-Hi-Hat.wav"},
+    "bell": {"lane": 8, "color": (255, 215, 0), "label": "BELL", "sound": "Closed-Hi-Hat.wav"}
 }
 
-# --- DATABASE LOGIC ---
-def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    conn.execute('CREATE TABLE IF NOT EXISTS scores (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, bpm INTEGER, json_data TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)')
-    conn.execute('CREATE TABLE IF NOT EXISTS midi_config (part TEXT PRIMARY KEY, note INTEGER)')
-    conn.close()
-
-def load_midi_map():
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.execute('SELECT part, note FROM midi_config')
-    mapping = {note: part for part, note in cursor.fetchall()}
-    conn.close()
-    return mapping
-
-# --- MIDI DIAGNOSTIC ---
-def open_midi_tester():
-    test_win = ctk.CTkToplevel()
-    test_win.title("MIDI Diagnostic")
-    test_win.geometry("600x550")
-    test_win.attributes("-topmost", True)
-    indicators = {}
-    grid_frame = ctk.CTkFrame(test_win)
-    grid_frame.pack(pady=20, padx=20, fill="both", expand=True)
-    for i, part in enumerate(PART_CONFIG.keys()):
-        lbl = ctk.CTkLabel(grid_frame, text=part.upper(), width=160, height=70, fg_color="#333333", corner_radius=12)
-        lbl.grid(row=i//2, column=i%2, padx=15, pady=10)
-        indicators[part] = lbl
-    raw_info = ctk.CTkLabel(test_win, text="Waiting for signal...")
-    raw_info.pack(pady=10)
-    def listen():
-        midi_map = load_midi_map()
-        try:
-            in_names = mido.get_input_names()
-            if not in_names: return
-            with mido.open_input(in_names[0]) as inport:
-                while test_win.winfo_exists():
-                    for msg in inport.iter_pending():
-                        if msg.type == 'note_on' and msg.velocity > 0:
-                            raw_info.configure(text=f"Note: {msg.note} | Map: {midi_map.get(msg.note, '???')}")
-                            p_name = midi_map.get(msg.note)
-                            if p_name in indicators:
-                                target = indicators[p_name]; target.configure(fg_color="#2ecc71")
-                                test_win.after(150, lambda t=target: t.configure(fg_color="#333333"))
-                    time.sleep(0.01)
-        except: pass
-    threading.Thread(target=listen, daemon=True).start()
-
-# --- AUDIO PLAYBACK (LISTEN MODE) ---
-def run_audio_playback(drum_data):
-    pygame.init(); pygame.mixer.init()
-    screen = pygame.display.set_mode((600, 300))
-    clock = pygame.time.Clock()
-    bpm = drum_data.get('metadata', {}).get('bpm', 120); events = drum_data.get('events', [])
-    ms_pb = 60000 / bpm; count_in_ms = ms_pb * 4
-    sounds = {p: (pygame.mixer.Sound(c['sound']) if os.path.exists(c['sound']) else None) for p, c in PART_CONFIG.items()}
-    try: m_h = pygame.mixer.Sound("metronome1.wav"); m_l = pygame.mixer.Sound("metronome2.wav")
-    except: m_h = m_l = None
-    running = True; start_t = pygame.time.get_ticks(); last_beat = -1; played = set()
-    while running:
-        ms = pygame.time.get_ticks() - start_t; screen.fill((30, 30, 35))
-        curr_beat = int(ms / ms_pb)
-        if curr_beat > last_beat:
-            if curr_beat % 4 == 0: (m_h.play() if m_h else None)
-            else: (m_l.play() if m_l else None)
-            last_beat = curr_beat
-        adj_ms = ms - count_in_ms
-        for i, ev in enumerate(events):
-            if i not in played and adj_ms >= ev['timestamp_ms']:
-                for p in ev['parts']:
-                    pn = p.lower().replace(" ", "-"); (sounds[pn].play() if pn in sounds and sounds[pn] else None)
-                played.add(i)
-        for ev in pygame.event.get(): 
-            if ev.type == pygame.QUIT: running = False
-        if len(played) == len(events) and adj_ms > (events[-1]['timestamp_ms'] if events else 0) + 1000: break
-        pygame.display.flip(); clock.tick(60)
-    pygame.quit()
-
-# --- TRAINING ENGINE (PRACTICE MODE) ---
-def run_training_session(drum_data, loops):
-    pygame.init(); pygame.mixer.init()
-    screen = pygame.display.set_mode((1200, 750)); clock = pygame.time.Clock()
-    
-    bpm = drum_data.get('metadata', {}).get('bpm', 120)
-    orig_events = drum_data.get('events', [])
-    ms_pb = 60000 / bpm; count_in_ms = ms_pb * 4
-    
-    try: 
-        m_h = pygame.mixer.Sound("metronome1.wav")
-        m_l = pygame.mixer.Sound("metronome2.wav")
-    except: m_h = m_l = None
-    
-    midi_map = load_midi_map(); midi_in = None
-    try: 
-        ports = mido.get_input_names()
-        if ports: midi_in = mido.open_input(ports[0])
-    except: pass
-    
-    score = 0; curr_loop = 0; running = True
-    lane_fb = {i: {"text": "", "color": (0,0,0), "expiry": 0} for i in range(1, 10)}
-    g_fb = "READY"
-    
-    while running:
-        if loops != 0 and curr_loop >= loops: break
-        start_t = pygame.time.get_ticks(); last_beat = -1; curr_loop += 1
-        evs = [dict(e) for e in orig_events]
-        for e in evs: e['timestamp_ms'] += count_in_ms
+class DrumApp(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("Drum Coach AI v6.1")
+        self.geometry("1450x900")
         
-        while running:
-            ms = pygame.time.get_ticks() - start_t
-            screen.fill((20, 20, 25))
-            
-            # --- METRONOME & COUNTDOWN ---
-            curr_beat = int(ms / ms_pb)
-            if curr_beat > last_beat:
-                if curr_beat % 4 == 0: (m_h.play() if m_h else None)
-                else: (m_l.play() if m_l else None)
-                last_beat = curr_beat
-                if ms < count_in_ms:
-                    g_fb = {0: "READY", 1: "3", 2: "2", 3: "1"}.get(curr_beat, "")
-                elif curr_beat == 4:
-                    g_fb = "GO!"
+        self.engine_state = {
+            "running": True, "active": False, "mute": False, 
+            "bpm": 120, "mode": "listen", "data": None, "score": 0,
+            "last_midi_note": None
+        }
+        self.init_db()
 
-            if midi_in:
-                for msg in midi_in.iter_pending():
+        # UI Layout
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
+        self.left_panel = ctk.CTkFrame(self, width=320)
+        self.left_panel.grid(row=0, column=0, rowspan=2, sticky="nsew", padx=10, pady=10)
+        
+        ctk.CTkLabel(self.left_panel, text="🛠 SETUP TOOLS", font=("Arial", 16, "bold")).pack(pady=(15, 10))
+        ctk.CTkButton(self.left_panel, text="📤 Upload New Score", command=self.upload_score, fg_color="#28a745").pack(fill="x", padx=20, pady=5)
+        ctk.CTkButton(self.left_panel, text="🔍 Test MIDI Signal", command=self.midi_tester, fg_color="#D3D3D3", text_color="black").pack(fill="x", padx=20, pady=5)
+        ctk.CTkButton(self.left_panel, text="⚙️ Calibrate Kit", command=self.midi_calibrate, fg_color="#555555").pack(fill="x", padx=20, pady=5)
+        
+        self.sidebar = ctk.CTkScrollableFrame(self.left_panel, label_text="SONG LIBRARY", label_font=("Arial", 14, "bold"))
+        self.sidebar.pack(fill="both", expand=True, padx=10, pady=(20, 10))
+        self.refresh_library()
+
+        self.top_bar = ctk.CTkFrame(self, height=80)
+        self.top_bar.grid(row=0, column=1, sticky="ew", padx=10, pady=10)
+        
+        self.mute_btn = ctk.CTkButton(self.top_bar, text="Mute Metronome", width=120, command=self.toggle_mute, fg_color="#555555")
+        self.mute_btn.pack(side="left", padx=15)
+        
+        ctk.CTkLabel(self.top_bar, text="BPM:", font=("Arial", 14)).pack(side="left", padx=5)
+        self.bpm_input = ctk.CTkEntry(self.top_bar, width=60)
+        self.bpm_input.insert(0, "120")
+        self.bpm_input.pack(side="left", padx=5)
+        
+        ctk.CTkButton(self.top_bar, text="Update & Play", width=120, command=self.apply_settings, fg_color="#27ae60").pack(side="left", padx=15)
+        
+        self.mode_var = ctk.StringVar(value="listen")
+        ctk.CTkRadioButton(self.top_bar, text="Listen", variable=self.mode_var, value="listen").pack(side="left", padx=10)
+        ctk.CTkRadioButton(self.top_bar, text="Practice", variable=self.mode_var, value="practice").pack(side="left", padx=10)
+
+        ctk.CTkButton(self.top_bar, text="🛑 STOP", width=80, command=self.stop_engine, fg_color="#c0392b").pack(side="right", padx=20)
+
+        self.highway_canvas = tk.Canvas(self, width=1100, height=780, bg="#141419", highlightthickness=0)
+        self.highway_canvas.grid(row=1, column=1, sticky="nsew", padx=10, pady=10)
+        
+        pygame.init(); pygame.mixer.init()
+        self.pg_surface = pygame.Surface((1100, 780))
+        self.sounds = {p: (pygame.mixer.Sound(c['sound']) if os.path.exists(c['sound']) else None) for p, c in PART_CONFIG.items()}
+        try:
+            self.m_h = pygame.mixer.Sound("metronome1.wav")
+            self.m_l = pygame.mixer.Sound("metronome2.wav")
+        except: self.m_h = self.m_l = None
+        
+        # Internal MIDI Tracking
+        self.midi_in = None
+        self.midi_map = {}
+        self.lane_fb = {i: {"text": "", "color": (0,0,0), "expiry": 0} for i in range(1, 10)}
+        
+        self.after(100, self.update_frame)
+
+    def init_db(self):
+        conn = sqlite3.connect(DB_NAME)
+        conn.execute('CREATE TABLE IF NOT EXISTS scores (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, bpm INTEGER, json_data TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)')
+        conn.execute('CREATE TABLE IF NOT EXISTS midi_config (part TEXT PRIMARY KEY, note INTEGER)')
+        conn.close()
+
+    def refresh_library(self):
+        for widget in self.sidebar.winfo_children(): widget.destroy()
+        conn = sqlite3.connect(DB_NAME)
+        songs = conn.execute('SELECT name, json_data FROM scores ORDER BY created_at DESC').fetchall()
+        conn.close()
+        for name, js in songs:
+            data = json.loads(js)
+            ctk.CTkButton(self.sidebar, text=f"🥁 {name}", anchor="w", fg_color="#F0F0F0", text_color="black", hover_color="#D1D1D1", command=lambda d=data: self.load_song(d)).pack(fill="x", pady=4, padx=5)
+
+    def load_song(self, data):
+        self.engine_state["data"] = data
+        self.engine_state["bpm"] = data['metadata'].get('bpm', 120)
+        self.engine_state["mode"] = self.mode_var.get()
+        self.engine_state["score"] = 0
+        self.bpm_input.delete(0, "end"); self.bpm_input.insert(0, str(self.engine_state["bpm"]))
+        
+        # 1. Reload MIDI Mapping
+        conn = sqlite3.connect(DB_NAME); cursor = conn.execute('SELECT part, note FROM midi_config'); self.midi_map = {n: p for p, n in cursor.fetchall()}; conn.close()
+        
+        # 2. Reset and Force Re-init MIDI Port
+        if self.midi_in: 
+            try: self.midi_in.close()
+            except: pass
+            self.midi_in = None
+
+        if self.engine_state["mode"] == "practice":
+            try: 
+                ports = mido.get_input_names()
+                if ports: self.midi_in = mido.open_input(ports[0])
+            except Exception as e:
+                print(f"MIDI Error: {e}")
+
+        self.engine_state["active"] = True
+        self.start_t, self.last_beat, self.played, self.ms_pb, self.active_evs = self.init_session()
+
+    def init_session(self):
+        if not self.engine_state["data"]: return 0, 0, set(), 1, []
+        bpm = self.engine_state["bpm"]; ms_pb = 60000 / bpm; count_in = ms_pb * 4
+        orig_bpm = self.engine_state["data"]['metadata'].get('bpm', 120)
+        scale = orig_bpm / bpm
+        evs = [dict(e) for e in self.engine_state["data"]['events']]
+        for e in evs: e['timestamp_ms'] = (e['timestamp_ms'] * scale) + count_in
+        return pygame.time.get_ticks(), -1, set(), ms_pb, evs
+
+    def stop_engine(self):
+        self.engine_state["active"] = False
+        if self.midi_in: 
+            try: self.midi_in.close()
+            except: pass
+            self.midi_in = None
+        pygame.mixer.stop()
+
+    def toggle_mute(self):
+        self.engine_state["mute"] = not self.engine_state["mute"]
+        self.mute_btn.configure(text="Unmute" if self.engine_state["mute"] else "Mute Metronome", fg_color="#e74c3c" if self.engine_state["mute"] else "#555555")
+
+    def apply_settings(self):
+        if self.engine_state["data"]: self.load_song(self.engine_state["data"])
+
+    def update_frame(self):
+        self.pg_surface.fill((20, 20, 25))
+        if self.engine_state["active"] and self.engine_state["data"]:
+            ms = pygame.time.get_ticks() - self.start_t
+            curr_beat = int(ms / self.ms_pb)
+            
+            # --- METRONOME ---
+            if curr_beat > self.last_beat:
+                if not self.engine_state["mute"] and self.m_h:
+                    (self.m_h.play() if curr_beat % 4 == 0 else self.m_l.play())
+                self.last_beat = curr_beat
+
+            # --- MIDI PRACTICE ENGINE ---
+            if self.engine_state["mode"] == "practice" and self.midi_in:
+                for msg in self.midi_in.iter_pending():
                     if msg.type == 'note_on' and msg.velocity > 0:
-                        raw_p = midi_map.get(msg.note)
-                        if raw_p:
-                            p_norm = raw_p.lower().replace(" ", "-")
-                            targets = [e for e in evs if any(p_norm in i.lower() for i in e['parts'])]
+                        self.engine_state["last_midi_note"] = msg.note # DEBUG INFO
+                        part_name = self.midi_map.get(msg.note)
+                        if part_name:
+                            # Normalize part name for lookup
+                            p_key = part_name.lower().replace(" ", "-")
+                            targets = [e for e in self.active_evs if any(p_key in i.lower().replace(" ", "-") for i in e['parts'])]
                             if targets:
-                                cl = min(targets, key=lambda x: abs(x['timestamp_ms'] - (ms - LATENCY_OFFSET)))
-                                diff = abs(cl['timestamp_ms'] - (ms - LATENCY_OFFSET))
-                                lx = PART_CONFIG.get(p_norm, {"lane": 1})["lane"]
-                                if diff < 30: score += 100; lane_fb[lx] = {"text": "PERFECT", "color": (46, 204, 113), "expiry": ms + 500}
-                                elif diff < 80: score += 50; lane_fb[lx] = {"text": "GOOD", "color": (241, 196, 15), "expiry": ms + 500}
-                                else: lane_fb[lx] = {"text": "MISS", "color": (231, 76, 60), "expiry": ms + 500}
-            
-            # --- DRAWING HUD & LABELS ---
-            pygame.draw.rect(screen, (35, 35, 40), (0, 0, 260, 750))
-            pygame.draw.line(screen, (255, 255, 255), (260, 0), (260, 750), 3)
-            l_font = pygame.font.SysFont("Arial", 22, True); f_font = pygame.font.SysFont("Arial", 28, True)
-            
-            drawn_lanes = set()
-            for pk, cfg in PART_CONFIG.items():
-                y = cfg['lane'] * 95 + 50
-                if cfg['lane'] not in drawn_lanes:
-                    pygame.draw.line(screen, (60, 60, 65), (260, y), (1200, y), 2)
-                    screen.blit(l_font.render(cfg['label'], True, (180, 180, 180)), (15, y - 40))
-                    drawn_lanes.add(cfg['lane'])
-                
-                fb = lane_fb[cfg['lane']]
-                if ms < fb["expiry"]:
-                    screen.blit(f_font.render(fb["text"], True, fb["color"]), (15, y - 10))
-            
-            # Score and Feedback
-            h_font = pygame.font.SysFont("Arial", 30, True)
-            screen.blit(h_font.render(f"SCORE: {score}", True, (255, 255, 255)), (980, 20))
-            if ms < count_in_ms + 1000:
-                b_font = pygame.font.SysFont("Arial", 80, True)
-                screen.blit(b_font.render(g_fb, True, (255, 255, 0)), (290, 20))
+                                closest = min(targets, key=lambda x: abs(x['timestamp_ms'] - (ms - LATENCY_OFFSET)))
+                                diff = abs(closest['timestamp_ms'] - (ms - LATENCY_OFFSET))
+                                lane = PART_CONFIG.get(p_key, {"lane": 1})["lane"]
+                                if diff < 40: 
+                                    self.engine_state["score"] += 100
+                                    self.lane_fb[lane] = {"text": "PERFECT", "color": (46, 204, 113), "expiry": ms + 400}
+                                elif diff < 100:
+                                    self.engine_state["score"] += 50
+                                    self.lane_fb[lane] = {"text": "GOOD", "color": (241, 196, 15), "expiry": ms + 400}
+                                else:
+                                    self.lane_fb[lane] = {"text": "MISS", "color": (231, 76, 60), "expiry": ms + 400}
 
-            # --- DRAWING NOTES ---
-            for e in evs:
-                x = 260 + (e['timestamp_ms'] - ms) * 0.4
-                if -50 < x < 1200:
+            # --- LISTEN MODE AUDIO ---
+            if self.engine_state["mode"] == "listen":
+                for i, ev in enumerate(self.active_evs):
+                    if i not in self.played and ms >= ev['timestamp_ms']:
+                        for p in ev['parts']:
+                            pn = p.lower().replace(" ", "-")
+                            if pn in self.sounds and self.sounds[pn]: self.sounds[pn].play()
+                        self.played.add(i)
+            else:
+                for i, ev in enumerate(self.active_evs):
+                    if i not in self.played and ms >= ev['timestamp_ms']: self.played.add(i)
+
+            # --- RENDER HIGHWAY ---
+            pygame.draw.rect(self.pg_surface, (30, 30, 35), (0, 0, 180, 780))
+            pygame.draw.line(self.pg_surface, (255, 255, 255), (180, 0), (180, 780), 2)
+            l_font = pygame.font.SysFont("Arial", 16, True); f_font = pygame.font.SysFont("Arial", 26, True)
+            
+            drawn = set()
+            for pk, cfg in PART_CONFIG.items():
+                y = cfg['lane'] * 85 + 40
+                if cfg['lane'] not in drawn:
+                    pygame.draw.line(self.pg_surface, (50, 50, 55), (180, y), (1100, y), 1)
+                    self.pg_surface.blit(l_font.render(cfg['label'], True, (150, 150, 150)), (10, y - 35))
+                    drawn.add(cfg['lane'])
+                fb = self.lane_fb[cfg['lane']]
+                if ms < fb["expiry"]: self.pg_surface.blit(f_font.render(fb["text"], True, fb["color"]), (10, y - 10))
+
+            for e in self.active_evs:
+                x = 180 + (e['timestamp_ms'] - ms) * 0.4
+                if -50 < x < 1100:
                     for p in e['parts']:
                         pn = p.lower().replace(" ", "-")
                         if pn in PART_CONFIG:
-                            pygame.draw.rect(screen, PART_CONFIG[pn]['color'], (x, PART_CONFIG[pn]['lane']*95+30, 35, 40), border_radius=8)
+                            pygame.draw.rect(self.pg_surface, PART_CONFIG[pn]['color'], (x, PART_CONFIG[pn]['lane']*85+20, 30, 35), border_radius=5)
             
-            for ev in pygame.event.get(): 
-                if ev.type == pygame.QUIT: running = False
-            
-            song_end = (max([e['timestamp_ms'] for e in evs]) if evs else 0) + 2000
-            if ms > song_end: break
-            pygame.display.flip(); clock.tick(60)
-    pygame.quit()
+            # --- HUD ---
+            dbg_txt = f"MIDI: {self.engine_state['last_midi_note']} | Mode: {self.engine_state['mode'].upper()}"
+            self.pg_surface.blit(l_font.render(dbg_txt, True, (200, 200, 0)), (200, 10))
+            score_txt = pygame.font.SysFont("Arial", 30, True).render(f"SCORE: {self.engine_state['score']}", True, (255,255,255))
+            self.pg_surface.blit(score_txt, (900, 10))
 
-# --- CALIBRATION & MAIN DASHBOARD (UNCHANGED) ---
-def calibrate_drums():
-    tk_root = tk.Tk(); tk_root.withdraw()
-    in_names = mido.get_input_names()
-    if not in_names: messagebox.showerror("Error", "No MIDI device!"); tk_root.destroy(); return
-    mapping = {}
-    try:
-        with mido.open_input(in_names[0]) as inport:
-            for part in PART_CONFIG.keys():
-                for _ in inport.iter_pending(): pass
-                win = ctk.CTkToplevel(); win.title(part.upper()); win.geometry("400x300"); win.attributes("-topmost", True)
-                disp = ctk.CTkLabel(win, text="Waiting...", font=("Courier", 32)); disp.pack(pady=20)
-                state = {"done": False, "note": None}
-                def save(): state["done"] = True; win.destroy()
-                ctk.CTkButton(win, text="SAVE LAST HIT", command=save, fg_color="#28a745").pack(pady=20)
-                while not state["done"] and win.winfo_exists():
-                    for msg in inport.iter_pending():
-                        if msg.type == 'note_on' and msg.velocity > 0:
-                            state["note"] = msg.note; disp.configure(text=f"NOTE: {msg.note}")
-                    tk_root.update(); time.sleep(0.01)
-                if state["note"] is not None: mapping[part] = state["note"]
-        conn = sqlite3.connect(DB_NAME)
-        for p, n in mapping.items(): conn.execute('INSERT OR REPLACE INTO midi_config (part, note) VALUES (?, ?)', (p, n))
-        conn.commit(); conn.close(); messagebox.showinfo("Success", "Saved!")
-    except Exception as e: messagebox.showerror("Error", str(e))
-    finally: tk_root.destroy()
+            if ms > (self.active_evs[-1]['timestamp_ms'] + 2000 if self.active_evs else 0):
+                if self.engine_state["mode"] == "listen": self.load_song(self.engine_state["data"])
+                else: self.engine_state["active"] = False
 
-class MainMenu(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.title("Drum Coach AI v4.2")
-        self.geometry("520x720")
-        init_db()
-        ctk.CTkLabel(self, text="🥁 DRUM COACH AI", font=("Arial", 28, "bold")).pack(pady=35)
-        ctk.CTkButton(self, text="📤 Upload New Score", command=self.upload, fg_color="#28a745", height=50).pack(pady=10)
-        ctk.CTkButton(self, text="📚 Practice Library", command=self.library, fg_color="#007bff", height=50).pack(pady=10)
-        ctk.CTkButton(self, text="🔊 Listen Mode", command=lambda: self.lib_win("listen"), fg_color="#e67e22", height=50).pack(pady=10)
-        ctk.CTkButton(self, text="🔍 MIDI Tester", command=open_midi_tester, fg_color="#9b59b6", height=50).pack(pady=10)
-        ctk.CTkButton(self, text="⚙️ Calibrate Kit", command=calibrate_drums, fg_color="#555555", height=50).pack(pady=10)
+        else:
+            txt = pygame.font.SysFont("Arial", 24).render("Select a song and hit 'Update & Play'", True, (100, 100, 105))
+            self.pg_surface.blit(txt, (380, 350))
 
-    def upload(self):
-        path = filedialog.askopenfilename(filetypes=[("Image Files", "*.jpg *.png *.jpeg")])
-        if not path: return
-        name = simpledialog.askstring("Name", "Song Title:")
-        def send_file():
+        # --- CANVAS BLIT ---
+        raw_data = pygame.image.tostring(self.pg_surface, "RGB")
+        img = Image.frombytes("RGB", (1100, 780), raw_data)
+        self.tk_img = ImageTk.PhotoImage(image=img)
+        self.highway_canvas.create_image(0, 0, image=self.tk_img, anchor="nw")
+        self.after(16, self.update_frame)
+
+    def upload_score(self):
+        p = filedialog.askopenfilename()
+        if not p: return
+        n = simpledialog.askstring("Name", "Song Title:")
+        def send():
             try:
-                with open(path, 'rb') as f:
-                    files = {'file': (os.path.basename(path), f, 'image/jpeg')}
-                    r = requests.post(N8N_URL, files=files)
+                with open(p, 'rb') as f:
+                    r = requests.post(N8N_URL, files={'file': (os.path.basename(p), f, 'image/jpeg')})
                 if r.status_code == 200:
-                    raw_response = r.json()
-                    txt = str(raw_response.get('output', raw_response.get('grid', raw_response)))
-                    match = re.search(r'\{.*\}', txt, re.DOTALL)
-                    data = json.loads(match.group()) if match else raw_response
-                    conn = sqlite3.connect(DB_NAME)
-                    conn.execute('INSERT INTO scores (name, bpm, json_data) VALUES (?, ?, ?)', 
-                                 (name, data.get('metadata', {}).get('bpm', 120), json.dumps(data)))
-                    conn.commit(); conn.close()
-                    messagebox.showinfo("Success", "Beat Transcribed!")
-                else: messagebox.showerror("Error", f"Server error: {r.status_code}")
-            except Exception as e: messagebox.showerror("Parse Error", f"Could not process AI response: {e}")
-        threading.Thread(target=send_file, daemon=True).start()
+                    txt = str(r.json().get('output', r.json())); data = json.loads(re.search(r'\{.*\}', txt, re.DOTALL).group())
+                    conn = sqlite3.connect(DB_NAME); conn.execute('INSERT INTO scores (name, bpm, json_data) VALUES (?, ?, ?)', (n, data['metadata']['bpm'], json.dumps(data))); conn.commit(); conn.close()
+                    self.after(0, self.refresh_library)
+            except: pass
+        threading.Thread(target=send, daemon=True).start()
 
-    def library(self): self.lib_win("practice")
+    def midi_tester(self):
+        # Tester re-opens port temporarily
+        win = ctk.CTkToplevel(self); win.title("MIDI Diagnostic"); win.geometry("800x600"); win.attributes("-topmost", True)
+        indicators = {}; grid = ctk.CTkFrame(win); grid.pack(pady=20, padx=20, fill="both", expand=True)
+        for i, part in enumerate(PART_CONFIG.keys()):
+            lbl = ctk.CTkLabel(grid, text=part.upper().replace("-", " "), width=180, height=50, fg_color="#D3D3D3", text_color="black", corner_radius=8)
+            lbl.grid(row=i//3, column=i%3, padx=5, pady=5); indicators[part] = lbl
+        def run_test():
+            conn = sqlite3.connect(DB_NAME); cursor = conn.execute('SELECT part, note FROM midi_config'); mapping = {n: p for p, n in cursor.fetchall()}; conn.close()
+            try:
+                ports = mido.get_input_names()
+                if not ports: return
+                with mido.open_input(ports[0]) as inport:
+                    while win.winfo_exists():
+                        for msg in inport.iter_pending():
+                            if msg.type == 'note_on' and msg.velocity > 0:
+                                p_name = mapping.get(msg.note)
+                                if p_name in indicators:
+                                    target = indicators[p_name]; target.configure(fg_color="#2ecc71", text_color="white")
+                                    win.after(150, lambda t=target: t.configure(fg_color="#D3D3D3", text_color="black"))
+                        win.update(); time.sleep(0.01)
+            except: pass
+        threading.Thread(target=run_test, daemon=True).start()
 
-    def lib_win(self, mode):
-        conn = sqlite3.connect(DB_NAME); rows = conn.execute('SELECT name, json_data FROM scores ORDER BY created_at DESC').fetchall(); conn.close()
-        if not rows: return
-        win = ctk.CTkToplevel(self); win.geometry("400x500")
-        for n, j in rows:
-            d = json.loads(j)
-            btn = ctk.CTkButton(win, text=n, command=lambda data=d: (self.play_p(data) if mode=="practice" else self.play_l(data)))
-            if mode == "listen": btn.configure(fg_color="#e67e22")
-            btn.pack(pady=8, padx=20)
-
-    def play_p(self, d):
-        l = simpledialog.askinteger("Loops", "Loops:", initialvalue=1)
-        if l is not None: threading.Thread(target=run_training_session, args=(d, l), daemon=True).start()
-
-    def play_l(self, d): threading.Thread(target=run_audio_playback, args=(d,), daemon=True).start()
+    def midi_calibrate(self):
+        cal_win = ctk.CTkToplevel(self); cal_win.title("Kit Calibration"); cal_win.geometry("450x400"); cal_win.attributes("-topmost", True)
+        ctk.CTkLabel(cal_win, text="Map pads. Port will release after calibration.", font=("Arial", 12)).pack(pady=5)
+        instr_label = ctk.CTkLabel(cal_win, text="Hit your KICK", font=("Arial", 18, "bold")); instr_label.pack(pady=10)
+        note_label = ctk.CTkLabel(cal_win, text="Waiting...", font=("Courier", 32)); note_label.pack(pady=20)
+        def run_cal():
+            in_names = mido.get_input_names()
+            if not in_names: messagebox.showerror("Error", "No MIDI device!"); cal_win.destroy(); return
+            mapping = {}
+            with mido.open_input(in_names[0]) as inport:
+                for part in PART_CONFIG.keys():
+                    if not cal_win.winfo_exists(): break
+                    self.after(0, lambda p=part: instr_label.configure(text=f"Hit your {p.upper().replace('-', ' ')}"))
+                    self.after(0, lambda: note_label.configure(text="Waiting..."))
+                    for _ in inport.iter_pending(): pass
+                    note = None
+                    while note is None and cal_win.winfo_exists():
+                        for msg in inport.iter_pending():
+                            if msg.type == 'note_on' and msg.velocity > 0: note = msg.note
+                        cal_win.update(); time.sleep(0.01)
+                    if note is not None:
+                        mapping[part] = note; self.after(0, lambda n=note: note_label.configure(text=f"NOTE: {n}"))
+                        time.sleep(0.6)
+            conn = sqlite3.connect(DB_NAME); 
+            for p, n in mapping.items(): conn.execute('INSERT OR REPLACE INTO midi_config (part, note) VALUES (?, ?)', (p, n))
+            conn.commit(); conn.close()
+            self.after(0, lambda: messagebox.showinfo("Success", "Done!")); self.after(0, cal_win.destroy)
+        threading.Thread(target=run_cal, daemon=True).start()
 
 if __name__ == "__main__":
-    app = MainMenu()
+    app = DrumApp()
     app.mainloop()
